@@ -84,15 +84,18 @@ function charFeedback(len, { warnMin, warnMax, errMin, errMax } = {}) {
   return `<span class="char-count ${cls}">${len} characters</span>`;
 }
 
-function heroRow(label, value, charOpts) {
+function heroRow(label, value, charOpts, link = false) {
   const isEmpty = !value;
   const display = isEmpty ? 'Not set' : value;
   const cls = isEmpty ? 'hero-value empty' : 'hero-value';
   const count = charOpts && !isEmpty ? charFeedback(value.length, charOpts) : '';
+  const inner = link && !isEmpty
+    ? `<a href="${escHtml(value)}" target="_blank" rel="noopener noreferrer">${escHtml(display)}</a>`
+    : escHtml(display);
   return `
     <div class="hero-row">
       <span class="hero-label">${label}</span>
-      <span class="${cls}">${escHtml(display)}</span>
+      <span class="${cls}">${inner}</span>
       ${count}
     </div>`;
 }
@@ -101,13 +104,22 @@ function escHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function isUrl(str) {
+  try { const u = new URL(str); return u.protocol === 'https:' || u.protocol === 'http:'; }
+  catch { return false; }
+}
+
 function renderGroup(name, entries, collapsed = false) {
-  const rows = entries.map(({ key, value }) => {
+  const rows = [...entries].sort((a, b) => a.key.localeCompare(b.key)).map(({ key, value }) => {
     const isEmpty = !value;
+    const display = isEmpty ? 'empty' : value;
+    const inner = !isEmpty && isUrl(value)
+      ? `<a href="${escHtml(value)}" target="_blank" rel="noopener noreferrer">${escHtml(value)}</a>`
+      : escHtml(display);
     return `
       <div class="meta-row">
         <span class="meta-key">${escHtml(key)}</span>
-        <span class="meta-value ${isEmpty ? 'empty' : ''}">${escHtml(isEmpty ? 'empty' : value)}</span>
+        <span class="meta-value ${isEmpty ? 'empty' : ''}">${inner}</span>
       </div>`;
   }).join('');
 
@@ -131,7 +143,7 @@ function render(data) {
   let html = '<div class="hero">';
   html += heroRow('Title', data.title, { warnMin: 30, warnMax: 60, errMax: 80 });
   html += heroRow('Description', data.metaDescription, { warnMin: 70, warnMax: 160, errMax: 320 });
-  html += heroRow('URL', data.url);
+  html += heroRow('URL', data.url, null, true);
   html += heroRow('Lang', data.lang);
   html += '</div>';
 

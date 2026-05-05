@@ -75,6 +75,8 @@ main { padding: 10px 12px 14px; }
 }
 
 .hero-value.empty { color: #adb5bd; font-style: italic; }
+.hero-value a, .meta-value a { color: #ff000f; text-decoration: none; }
+.hero-value a:hover, .meta-value a:hover { text-decoration: underline; }
 
 .char-count {
   font-size: 10px;
