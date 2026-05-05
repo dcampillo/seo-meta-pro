@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SEO Meta Inspector",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Extract and inspect title, description, and meta tags grouped by type.",
   "author": "David Campillo",
   "permissions": ["activeTab", "scripting"],
