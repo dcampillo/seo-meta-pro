@@ -194,9 +194,8 @@ async function init() {
 }
 
 function renderFooter() {
-  const { version, author } = chrome.runtime.getManifest();
+  const { version } = chrome.runtime.getManifest();
   const footer = document.getElementById('footer');
-  if (author) footer.innerHTML += `<span>${escHtml(author)}</span>`;
   footer.innerHTML += `<span>v${escHtml(version)}</span>`;
 }
 
