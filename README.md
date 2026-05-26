@@ -4,7 +4,8 @@ A Chrome extension that extracts and displays SEO-relevant meta tags from any we
 
 ## Features
 
-- **Page summary** — shows Title, Description, URL, and HTML `lang` attribute at a glance
+- **Page summary** — shows Title, Description, URL, HTML `lang` attribute, and og:image thumbnail at a glance
+- **og:image preview** — displays Open Graph image as a 200px-wide clickable thumbnail with CORS detection and error handling
 - **Character count warnings** — highlights title and description lengths that fall outside SEO best-practice ranges
 - **Grouped meta tags** — organises all `<meta>` tags into labelled, collapsible sections
 - **Copy to clipboard** — exports all extracted data as formatted JSON with one click
@@ -78,4 +79,4 @@ No data is sent to any external server. Everything runs locally in your browser.
 
 ## Author
 
-David Campillo — v1.0.2
+David Campillo — v1.2.0
