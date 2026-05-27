@@ -79,4 +79,4 @@ No data is sent to any external server. Everything runs locally in your browser.
 
 ## Author
 
-David Campillo — v1.2.0
+David Campillo — v1.3.0
