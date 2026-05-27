@@ -72,7 +72,20 @@ function extractMeta() {
 
   const lang = document.documentElement.getAttribute('lang') || '';
 
-  return { title, metaDescription, lang, groups };
+  const ogImage = (() => {
+    const el = document.querySelector('meta[property="og:image"]');
+    if (!el) return '';
+    const content = el.getAttribute('content') || '';
+    if (!content) return '';
+    try {
+      const url = new URL(content, window.location.href);
+      return url.href;
+    } catch {
+      return content;
+    }
+  })();
+
+  return { title, metaDescription, lang, groups, ogImage };
 }
 
 function charFeedback(len, { warnMin, warnMax, errMin, errMax } = {}) {
@@ -97,6 +110,38 @@ function heroRow(label, value, charOpts, link = false) {
       <span class="hero-label">${label}</span>
       <span class="${cls}">${inner}</span>
       ${count}
+    </div>`;
+}
+
+async function checkCors(url) {
+  try {
+    const response = await fetch(url, { mode: 'cors' });
+    return { ok: response.ok, corsBlocked: false };
+  } catch (err) {
+    if (err.name === 'TypeError') {
+      return { ok: false, corsBlocked: true };
+    }
+    return { ok: false, corsBlocked: false };
+  }
+}
+
+function thumbnailRow(label, ogImageUrl) {
+  const isEmpty = !ogImageUrl;
+
+  if (isEmpty) {
+    return `
+      <div class="hero-row">
+        <span class="hero-label">${label}</span>
+        <div class="thumbnail-placeholder">No thumbnail found (og:image)</div>
+      </div>`;
+  }
+
+  return `
+    <div class="hero-row">
+      <span class="hero-label">${label}</span>
+      <div class="thumbnail-container" data-url="${escHtml(ogImageUrl)}">
+        <img class="thumbnail-image" src="${escHtml(ogImageUrl)}" alt="og:image thumbnail" loading="lazy" />
+      </div>
     </div>`;
 }
 
@@ -145,6 +190,7 @@ function render(data) {
   html += heroRow('Description', data.metaDescription, { warnMin: 70, warnMax: 160, errMax: 320 });
   html += heroRow('URL', data.url, null, true);
   html += heroRow('Lang', data.lang);
+  html += thumbnailRow('Thumbnail', data.ogImage);
   html += '</div>';
 
   const order = ['General','Elastic Search','Open Graph','Twitter Card','Facebook','Property','HTTP Equiv'];
@@ -168,6 +214,40 @@ function render(data) {
   main.querySelectorAll('.group-header').forEach(header => {
     header.addEventListener('click', () => {
       header.closest('.group').classList.toggle('collapsed');
+    });
+  });
+
+  // Handle thumbnail image interactions
+  main.querySelectorAll('.thumbnail-container').forEach(container => {
+    const url = container.getAttribute('data-url');
+    const img = container.querySelector('img');
+
+    img.addEventListener('load', () => {
+      container.classList.add('loaded');
+      container.classList.remove('error');
+    });
+
+    img.addEventListener('error', () => {
+      container.classList.add('error');
+      const placeholder = document.createElement('div');
+      placeholder.className = 'thumbnail-placeholder';
+      placeholder.textContent = '⚠ Broken image';
+      img.replaceWith(placeholder);
+    });
+
+    container.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+
+    checkCors(url).then(result => {
+      if (result.corsBlocked) {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'thumbnail-placeholder';
+        placeholder.textContent = 'Image blocked by CORS';
+        container.classList.add('error');
+        img.replaceWith(placeholder);
+      }
     });
   });
 }
@@ -200,3 +280,7 @@ function renderFooter() {
 }
 
 document.addEventListener('DOMContentLoaded', () => { renderFooter(); init(); });
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { checkCors, thumbnailRow };
+}

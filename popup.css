@@ -172,3 +172,38 @@ footer {
   font-size: 10px;
   color: #6c757d;
 }
+
+/* ── Thumbnail ── */
+.thumbnail-container {
+  display: inline-block;
+  max-width: 200px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #f8f9fa;
+}
+
+.thumbnail-image {
+  display: block;
+  width: 200px;
+  height: auto;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.thumbnail-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 120px;
+  background: #f1f3f5;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  color: #6c757d;
+  font-size: 12px;
+  text-align: center;
+  padding: 12px;
+  box-sizing: border-box;
+}
