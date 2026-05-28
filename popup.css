@@ -29,6 +29,40 @@ header h1 {
   letter-spacing: 0.2px;
 }
 
+/* ── Tab navigation ── */
+#tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0;
+  margin: 0;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  background: #f8f9fa;
+  color: #495057;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+
+.tab-btn:hover {
+  background: #f1f3f5;
+}
+
+.tab-btn.active {
+  background: #fff;
+  border-bottom-color: #ff000f;
+  color: #212529;
+}
+
 #copy-all {
   font-size: 11px;
   padding: 4px 10px;
@@ -206,4 +240,151 @@ footer {
   text-align: center;
   padding: 12px;
   box-sizing: border-box;
+}
+
+/* ── Social Media Validation Cards ── */
+.validation-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.validation-card {
+  border-left: 4px solid #dee2e6;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.validation-card.pass {
+  border-left-color: #28a745;
+}
+
+.validation-card.warning {
+  border-left-color: #ffc107;
+}
+
+.validation-card.fail {
+  border-left-color: #dc3545;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #f8f9fa;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.card-header:hover {
+  background: #f1f3f5;
+}
+
+.card-title-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-status-icon {
+  font-size: 14px;
+  width: 16px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #212529;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-status-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.card-status-badge.pass {
+  background: #d4edda;
+  color: #155724;
+}
+
+.card-status-badge.warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.card-status-badge.fail {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.card-body {
+  padding: 10px 12px;
+}
+
+.card-body.hidden {
+  display: none;
+}
+
+.field-list {
+  margin-bottom: 8px;
+}
+
+.field-list:last-child {
+  margin-bottom: 0;
+}
+
+.field-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  margin-bottom: 4px;
+  margin-top: 8px;
+}
+
+.field-section-title:first-of-type {
+  margin-top: 0;
+}
+
+.field-item {
+  font-size: 12px;
+  color: #212529;
+  padding: 4px 8px;
+  margin: 2px 0;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.field-item.present {
+  background: #d4edda;
+  color: #155724;
+}
+
+.field-item.missing {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.field-item.optional-missing {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.field-item-icon {
+  font-size: 12px;
+  min-width: 14px;
 }

@@ -149,6 +149,67 @@ function escHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function renderValidationCard(validation) {
+  const { platform, status, requiredPresent, optionalPresent, requiredMissing, optionalMissing } = validation;
+  const platformLabel = platform.charAt(0).toUpperCase() + platform.slice(1);
+
+  const statusIcon = status === 'pass' ? '✓' : status === 'warning' ? 'ℹ' : '⚠';
+  const statusText = status === 'pass' ? 'Pass' : status === 'warning' ? 'Warning' : 'Fail';
+
+  let fieldListHtml = '';
+
+  if (requiredPresent.length > 0) {
+    fieldListHtml += '<div class="field-section-title">Required (Present)</div>';
+    requiredPresent.forEach(field => {
+      fieldListHtml += `<div class="field-item present"><span class="field-item-icon">✓</span>${escHtml(field)}</div>`;
+    });
+  }
+
+  if (requiredMissing.length > 0) {
+    fieldListHtml += '<div class="field-section-title">Required (Missing)</div>';
+    requiredMissing.forEach(field => {
+      fieldListHtml += `<div class="field-item missing"><span class="field-item-icon">✗</span>${escHtml(field)}</div>`;
+    });
+  }
+
+  if (optionalPresent.length > 0) {
+    fieldListHtml += '<div class="field-section-title">Optional (Present)</div>';
+    optionalPresent.forEach(field => {
+      fieldListHtml += `<div class="field-item present"><span class="field-item-icon">✓</span>${escHtml(field)}</div>`;
+    });
+  }
+
+  if (optionalMissing.length > 0) {
+    fieldListHtml += '<div class="field-section-title">Optional (Missing)</div>';
+    optionalMissing.forEach(field => {
+      fieldListHtml += `<div class="field-item optional-missing"><span class="field-item-icon">○</span>${escHtml(field)}</div>`;
+    });
+  }
+
+  return `
+    <div class="validation-card ${status}">
+      <div class="card-header">
+        <div class="card-title-section">
+          <span class="card-status-icon">${statusIcon}</span>
+          <span class="card-title">${platformLabel}</span>
+        </div>
+        <span class="card-status-badge ${status}">${statusText}</span>
+      </div>
+      <div class="card-body">
+        ${fieldListHtml}
+      </div>
+    </div>`;
+}
+
+function renderSocialMediaTab(validations) {
+  let html = '<div class="validation-cards">';
+  ['linkedin', 'twitter', 'facebook'].forEach(platform => {
+    html += renderValidationCard(validations[platform]);
+  });
+  html += '</div>';
+  return html;
+}
+
 function isUrl(str) {
   try { const u = new URL(str); return u.protocol === 'https:' || u.protocol === 'http:'; }
   catch { return false; }
@@ -252,6 +313,31 @@ function render(data) {
   });
 }
 
+let currentData = null;
+let currentValidations = null;
+
+function switchTab(tabName) {
+  const main = document.getElementById('content');
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+  if (tabName === 'meta-tags') {
+    render(currentData);
+  } else if (tabName === 'social-media') {
+    main.innerHTML = renderSocialMediaTab(currentValidations);
+    setupCardToggle();
+  }
+}
+
+function setupCardToggle() {
+  document.querySelectorAll('.card-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const body = header.nextElementSibling;
+      body.classList.toggle('hidden');
+    });
+  });
+}
+
 async function init() {
   const main = document.getElementById('content');
   try {
@@ -260,7 +346,22 @@ async function init() {
 
     const data = await extractData(tab.id);
     data.url = tab.url || '';
+    currentData = data;
+
+    // Extract and validate social media metadata
+    const socialMediaData = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: extractSocialMediaMetadata,
+    });
+    const fields = socialMediaData[0].result;
+    currentValidations = validateSocialMediaMetadata(fields);
+
     render(data);
+
+    // Setup tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => switchTab(e.target.getAttribute('data-tab')));
+    });
 
     document.getElementById('copy-all').addEventListener('click', async (e) => {
       await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
