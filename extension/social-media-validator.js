@@ -21,8 +21,9 @@ function extractSocialMediaMetadata() {
     'twitter:image': extractField('twitter:image', 'twitter:image'),
   };
 
-  // Normalize og:image URL to absolute
-  if (fields['og:image']) {
+  // Normalize og:image URL to absolute. A valid URL has no raw whitespace; if it does,
+  // leave the author's value untouched rather than percent-encoding it into a bogus URL.
+  if (fields['og:image'] && !/\s/.test(fields['og:image'])) {
     try {
       const url = new URL(fields['og:image'], window.location.href);
       fields['og:image'] = url.href;

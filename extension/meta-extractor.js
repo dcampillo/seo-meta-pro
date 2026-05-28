@@ -62,6 +62,9 @@ function extractMeta() {
     if (!el) return '';
     const content = el.getAttribute('content') || '';
     if (!content) return '';
+    // A valid URL has no raw whitespace; if it does, leave the author's value untouched
+    // rather than letting new URL() percent-encode it into a bogus absolute URL.
+    if (/\s/.test(content)) return content;
     try {
       const url = new URL(content, window.location.href);
       return url.href;
