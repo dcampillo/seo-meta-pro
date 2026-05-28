@@ -12,7 +12,7 @@ function setupDOM() {
 
 // Read and eval the meta-extractor code
 const fs = require('fs');
-const metaExtractorCode = fs.readFileSync('./meta-extractor.js', 'utf8');
+const metaExtractorCode = fs.readFileSync('./extension/meta-extractor.js', 'utf8');
 
 // Remove the module.exports check to avoid issues
 const testCode = metaExtractorCode.replace(

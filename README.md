@@ -60,7 +60,8 @@ extension/                    # Loadable Chrome extension (Load unpacked here)
 ├── manifest.json             # Chrome Manifest v3
 ├── popup.html                # Extension popup shell
 ├── popup.css                 # Styles
-├── popup.js                  # Data extraction and rendering logic
+├── popup.js                  # Rendering logic; injects extractMeta into the page
+├── meta-extractor.js         # extractMeta (single source); loaded by popup + tests
 ├── social-media-validator.js # Social media metadata extraction + validation
 └── icons/
     ├── icon16.png
@@ -68,7 +69,6 @@ extension/                    # Loadable Chrome extension (Load unpacked here)
     └── icon128.png
 
 # Project root (dev tooling, not packaged)
-├── meta-extractor.js         # Testable copy of extractMeta (mirrors popup.js)
 ├── *.test.js                 # Jest test suites
 ├── test-runner.js            # Standalone test runner
 ├── jest.config.js
