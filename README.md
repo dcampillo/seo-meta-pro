@@ -32,7 +32,7 @@ This extension is not published to the Chrome Web Store. Load it manually:
 2. Open Chrome and go to `chrome://extensions`
 3. Enable **Developer mode** (toggle in the top-right corner)
 4. Click **Load unpacked**
-5. Select the `seo-ext/` folder
+5. Select the `extension/` folder
 
 The extension icon will appear in your toolbar. Click it on any page to inspect its meta tags.
 
@@ -56,16 +56,24 @@ Values shown in orange are outside the recommended range; red indicates they are
 ## File structure
 
 ```
-seo-ext/
-├── manifest.json   # Chrome Manifest v3
-├── popup.html      # Extension popup shell
-├── popup.css       # Styles
-├── popup.js        # Data extraction and rendering logic
-├── content.js      # Reference copy of the extraction function
+extension/                    # Loadable Chrome extension (Load unpacked here)
+├── manifest.json             # Chrome Manifest v3
+├── popup.html                # Extension popup shell
+├── popup.css                 # Styles
+├── popup.js                  # Data extraction and rendering logic
+├── social-media-validator.js # Social media metadata extraction + validation
+├── meta-extractor.js         # Reference copy of the meta extraction function
+├── content.js                # Reference copy of the extraction function
 └── icons/
     ├── icon16.png
     ├── icon48.png
     └── icon128.png
+
+# Project root (dev tooling, not packaged)
+├── *.test.js                 # Jest test suites
+├── test-runner.js            # Standalone test runner
+├── jest.config.js
+└── package.json
 ```
 
 ## Permissions

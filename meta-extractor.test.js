@@ -1,5 +1,5 @@
-const { extractMeta } = require('./meta-extractor');
-const { checkCors, thumbnailRow } = require('./popup');
+const { extractMeta } = require('./extension/meta-extractor');
+const { checkCors, thumbnailRow } = require('./extension/popup');
 
 describe('extractMeta - og:image extraction', () => {
   beforeEach(() => {
