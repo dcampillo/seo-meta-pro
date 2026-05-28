@@ -63,6 +63,14 @@ header h1 {
   color: #212529;
 }
 
+.tab-cue {
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.tab-cue.pass { color: #28a745; }
+.tab-cue.fail { color: #dc3545; }
+
 #copy-all {
   font-size: 11px;
   padding: 4px 10px;

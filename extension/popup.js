@@ -243,6 +243,18 @@ function switchTab(tabName) {
   }
 }
 
+function setSocialMediaCue(validations) {
+  const tab = document.querySelector('[data-tab="social-media"]');
+  if (!tab || !validations) return;
+  const allPass = ['linkedin', 'twitter', 'facebook']
+    .every(p => validations[p] && validations[p].status === 'pass');
+  tab.title = allPass ? 'All platforms compliant' : 'Some platforms need attention';
+  const cue = document.createElement('span');
+  cue.className = `tab-cue ${allPass ? 'pass' : 'fail'}`;
+  cue.textContent = allPass ? '✓' : '⚠';
+  tab.appendChild(cue);
+}
+
 function setupCardToggle() {
   document.querySelectorAll('.card-header').forEach(header => {
     header.addEventListener('click', () => {
@@ -271,10 +283,11 @@ async function init() {
     currentValidations = validateSocialMediaMetadata(fields);
 
     render(data);
+    setSocialMediaCue(currentValidations);
 
     // Setup tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => switchTab(e.target.getAttribute('data-tab')));
+      btn.addEventListener('click', (e) => switchTab(e.currentTarget.getAttribute('data-tab')));
     });
 
     document.getElementById('copy-all').addEventListener('click', async (e) => {
