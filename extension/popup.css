@@ -269,10 +269,6 @@ footer {
   border-left-color: #28a745;
 }
 
-.validation-card.warning {
-  border-left-color: #ffc107;
-}
-
 .validation-card.fail {
   border-left-color: #dc3545;
 }
@@ -324,11 +320,6 @@ footer {
 .card-status-badge.pass {
   background: #d4edda;
   color: #155724;
-}
-
-.card-status-badge.warning {
-  background: #fff3cd;
-  color: #856404;
 }
 
 .card-status-badge.fail {
