@@ -68,9 +68,11 @@ extension/                    # Loadable Chrome extension (Load unpacked here)
     ├── icon48.png
     └── icon128.png
 
-# Project root (dev tooling, not packaged)
+tests/                        # Dev tooling, not packaged
 ├── *.test.js                 # Jest test suites
-├── test-runner.js            # Standalone test runner
+└── test-runner.js            # Standalone test runner
+
+# Project root
 ├── jest.config.js
 └── package.json
 ```

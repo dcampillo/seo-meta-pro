@@ -1,4 +1,4 @@
-const { extractSocialMediaMetadata, validateSocialMediaMetadata } = require('./extension/social-media-validator');
+const { extractSocialMediaMetadata, validateSocialMediaMetadata } = require('../extension/social-media-validator');
 
 describe('Social Media Metadata Extractor', () => {
   beforeEach(() => {
