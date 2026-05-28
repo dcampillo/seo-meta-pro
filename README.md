@@ -62,14 +62,13 @@ extension/                    # Loadable Chrome extension (Load unpacked here)
 ├── popup.css                 # Styles
 ├── popup.js                  # Data extraction and rendering logic
 ├── social-media-validator.js # Social media metadata extraction + validation
-├── meta-extractor.js         # Reference copy of the meta extraction function
-├── content.js                # Reference copy of the extraction function
 └── icons/
     ├── icon16.png
     ├── icon48.png
     └── icon128.png
 
 # Project root (dev tooling, not packaged)
+├── meta-extractor.js         # Testable copy of extractMeta (mirrors popup.js)
 ├── *.test.js                 # Jest test suites
 ├── test-runner.js            # Standalone test runner
 ├── jest.config.js

@@ -1,4 +1,4 @@
-const { extractMeta } = require('./extension/meta-extractor');
+const { extractMeta } = require('./meta-extractor');
 const { checkCors, thumbnailRow } = require('./extension/popup');
 
 describe('extractMeta - og:image extraction', () => {
