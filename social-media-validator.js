@@ -4,11 +4,17 @@ function extractSocialMediaMetadata() {
     return el ? el.getAttribute('content') || '' : '';
   };
 
+  const extractByProperty = (property) => {
+    const el = document.querySelector(`meta[property="${property}"]`);
+    return el ? el.getAttribute('content') || '' : '';
+  };
+
   const fields = {
     'og:title': extractField('og:title', 'og:title') || document.title || '',
     'og:description': extractField('og:description', 'og:description'),
     'og:image': extractField('og:image', 'og:image'),
     'og:url': extractField('og:url', 'og:url'),
+    'og:type': extractByProperty('og:type'),
     'twitter:card': extractField('twitter:card', 'twitter:card'),
     'twitter:title': extractField('twitter:title', 'twitter:title'),
     'twitter:description': extractField('twitter:description', 'twitter:description'),
@@ -31,16 +37,13 @@ function extractSocialMediaMetadata() {
 function validateSocialMediaMetadata(fields) {
   const platformRequirements = {
     linkedin: {
-      required: ['og:title', 'og:description', 'og:image'],
-      optional: ['og:url'],
+      required: ['og:title', 'og:description', 'og:image', 'og:url', 'og:type'],
     },
     twitter: {
-      required: ['twitter:card', 'twitter:title', 'twitter:description'],
-      optional: ['twitter:image'],
+      required: ['twitter:card', 'twitter:title', 'twitter:description', 'twitter:image'],
     },
     facebook: {
-      required: ['og:title', 'og:description', 'og:image'],
-      optional: ['og:url'],
+      required: ['og:title', 'og:description', 'og:image', 'og:url', 'og:type'],
     },
   };
 
@@ -48,24 +51,12 @@ function validateSocialMediaMetadata(fields) {
 
   Object.entries(platformRequirements).forEach(([platform, requirements]) => {
     const requiredMissing = requirements.required.filter(field => !fields[field]);
-    const optionalMissing = requirements.optional.filter(field => !fields[field]);
-
-    let status;
-    if (requiredMissing.length > 0) {
-      status = 'fail';
-    } else if (optionalMissing.length > 0) {
-      status = 'warning';
-    } else {
-      status = 'pass';
-    }
 
     results[platform] = {
       platform,
-      status,
+      status: requiredMissing.length > 0 ? 'fail' : 'pass',
       requiredMissing,
-      optionalMissing,
       requiredPresent: requirements.required.filter(field => fields[field]),
-      optionalPresent: requirements.optional.filter(field => fields[field]),
     };
   });
 

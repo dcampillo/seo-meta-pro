@@ -150,11 +150,11 @@ function escHtml(str) {
 }
 
 function renderValidationCard(validation) {
-  const { platform, status, requiredPresent, optionalPresent, requiredMissing, optionalMissing } = validation;
+  const { platform, status, requiredPresent, requiredMissing } = validation;
   const platformLabel = platform.charAt(0).toUpperCase() + platform.slice(1);
 
-  const statusIcon = status === 'pass' ? '✓' : status === 'warning' ? 'ℹ' : '⚠';
-  const statusText = status === 'pass' ? 'Pass' : status === 'warning' ? 'Warning' : 'Fail';
+  const statusIcon = status === 'pass' ? '✓' : '⚠';
+  const statusText = status === 'pass' ? 'Pass' : 'Fail';
 
   let fieldListHtml = '';
 
@@ -169,20 +169,6 @@ function renderValidationCard(validation) {
     fieldListHtml += '<div class="field-section-title">Required (Missing)</div>';
     requiredMissing.forEach(field => {
       fieldListHtml += `<div class="field-item missing"><span class="field-item-icon">✗</span>${escHtml(field)}</div>`;
-    });
-  }
-
-  if (optionalPresent.length > 0) {
-    fieldListHtml += '<div class="field-section-title">Optional (Present)</div>';
-    optionalPresent.forEach(field => {
-      fieldListHtml += `<div class="field-item present"><span class="field-item-icon">✓</span>${escHtml(field)}</div>`;
-    });
-  }
-
-  if (optionalMissing.length > 0) {
-    fieldListHtml += '<div class="field-section-title">Optional (Missing)</div>';
-    optionalMissing.forEach(field => {
-      fieldListHtml += `<div class="field-item optional-missing"><span class="field-item-icon">○</span>${escHtml(field)}</div>`;
     });
   }
 

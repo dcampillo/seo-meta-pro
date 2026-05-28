@@ -40,6 +40,18 @@ describe('Social Media Metadata Extractor', () => {
     const result = extractSocialMediaMetadata();
     expect(result['twitter:card']).toBe('summary_large_image');
   });
+
+  test('extracts og:type from property meta tag', () => {
+    document.head.innerHTML = '<meta property="og:type" content="article">';
+    const result = extractSocialMediaMetadata();
+    expect(result['og:type']).toBe('article');
+  });
+
+  test('does not extract og:type from name meta tag', () => {
+    document.head.innerHTML = '<meta name="og:type" content="article">';
+    const result = extractSocialMediaMetadata();
+    expect(result['og:type']).toBe('');
+  });
 });
 
 describe('Social Media Validation Engine', () => {
@@ -48,6 +60,8 @@ describe('Social Media Validation Engine', () => {
       'og:title': 'Title',
       'og:description': 'Description',
       'og:image': 'https://example.com/image.jpg',
+      'og:url': 'https://example.com',
+      'og:type': 'article',
     };
     const result = validateSocialMediaMetadata(fields);
     expect(result.linkedin.status).toBe('pass');
@@ -62,22 +76,37 @@ describe('Social Media Validation Engine', () => {
     };
     const result = validateSocialMediaMetadata(fields);
     expect(result.linkedin.status).toBe('fail');
-    expect(result.linkedin.requiredMissing).toEqual(['og:description', 'og:image']);
+    expect(result.linkedin.requiredMissing).toEqual(['og:description', 'og:image', 'og:url', 'og:type']);
   });
 
-  test('returns warning status when optional fields are missing', () => {
+  test('fails when og:type is missing for LinkedIn and Facebook', () => {
     const fields = {
       'og:title': 'Title',
       'og:description': 'Description',
       'og:image': 'https://example.com/image.jpg',
-      'og:url': '',
+      'og:url': 'https://example.com',
+      'og:type': '',
     };
     const result = validateSocialMediaMetadata(fields);
-    expect(result.linkedin.status).toBe('warning');
-    expect(result.linkedin.optionalMissing).toEqual(['og:url']);
+    expect(result.linkedin.status).toBe('fail');
+    expect(result.linkedin.requiredMissing).toEqual(['og:type']);
+    expect(result.facebook.status).toBe('fail');
+    expect(result.facebook.requiredMissing).toEqual(['og:type']);
   });
 
-  test('validates Twitter correctly', () => {
+  test('does not require og:type for Twitter', () => {
+    const fields = {
+      'twitter:card': 'summary',
+      'twitter:title': 'Title',
+      'twitter:description': 'Description',
+      'twitter:image': 'https://example.com/image.jpg',
+    };
+    const result = validateSocialMediaMetadata(fields);
+    expect(result.twitter.status).toBe('pass');
+    expect(result.twitter.requiredMissing).toEqual([]);
+  });
+
+  test('fails Twitter when twitter:image is missing', () => {
     const fields = {
       'twitter:card': 'summary',
       'twitter:title': 'Title',
@@ -85,8 +114,8 @@ describe('Social Media Validation Engine', () => {
       'twitter:image': '',
     };
     const result = validateSocialMediaMetadata(fields);
-    expect(result.twitter.status).toBe('warning');
-    expect(result.twitter.optionalMissing).toEqual(['twitter:image']);
+    expect(result.twitter.status).toBe('fail');
+    expect(result.twitter.requiredMissing).toEqual(['twitter:image']);
   });
 
   test('identifies present required fields', () => {
@@ -95,10 +124,10 @@ describe('Social Media Validation Engine', () => {
       'og:description': 'Description',
       'og:image': 'https://example.com/image.jpg',
       'og:url': 'https://example.com',
+      'og:type': 'website',
     };
     const result = validateSocialMediaMetadata(fields);
-    expect(result.linkedin.requiredPresent).toEqual(['og:title', 'og:description', 'og:image']);
-    expect(result.linkedin.optionalPresent).toEqual(['og:url']);
+    expect(result.linkedin.requiredPresent).toEqual(['og:title', 'og:description', 'og:image', 'og:url', 'og:type']);
   });
 
   test('validates all three platforms simultaneously', () => {
@@ -106,9 +135,12 @@ describe('Social Media Validation Engine', () => {
       'og:title': 'Title',
       'og:description': 'Description',
       'og:image': 'https://example.com/image.jpg',
+      'og:url': 'https://example.com',
+      'og:type': 'article',
       'twitter:card': 'summary',
       'twitter:title': 'Title',
       'twitter:description': 'Description',
+      'twitter:image': 'https://example.com/image.jpg',
     };
     const result = validateSocialMediaMetadata(fields);
     expect(result.linkedin.status).toBe('pass');
