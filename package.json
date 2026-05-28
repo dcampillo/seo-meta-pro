@@ -1,6 +1,6 @@
 {
   "name": "seo-meta-pro",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Chrome extension for analyzing page SEO metadata",
   "scripts": {
     "test": "jest"
