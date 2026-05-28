@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Package extension
         run: |
@@ -21,6 +21,6 @@ jobs:
           zip -r "../seo-meta-pro-${GITHUB_REF_NAME}.zip" .
 
       - name: Create release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: seo-meta-pro-${{ github.ref_name }}.zip
