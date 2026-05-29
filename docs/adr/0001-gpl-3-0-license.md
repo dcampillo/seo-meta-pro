@@ -1,5 +1,7 @@
 # License under GPL-3.0-or-later
 
+**Status: Superseded by [ADR 0002](0002-relicense-to-mit.md) (relicensed to MIT in v2.0.0).**
+
 We license SEO Meta Inspector under the **GNU General Public License, version 3
 or later (`GPL-3.0-or-later`)**, rather than a permissive license. The intent is
 copyleft: anyone who distributes a modified version (a fork or a rebranded
