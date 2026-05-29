@@ -2,6 +2,8 @@
   "name": "seo-meta-pro",
   "version": "1.8.0",
   "description": "Chrome extension for analyzing page SEO metadata",
+  "author": "David Campillo",
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "test": "jest"
   },

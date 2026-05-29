@@ -88,4 +88,14 @@ No data is sent to any external server. Everything runs locally in your browser.
 
 ## Author
 
-David Campillo — v1.3.0
+David Campillo — v1.8.0
+
+## License
+
+Copyright (C) 2026 David Campillo.
+
+SEO Meta Inspector is free software, licensed under the **GNU General Public
+License, version 3 or later (GPL-3.0-or-later)**. You may redistribute and/or
+modify it under those terms; it comes with NO WARRANTY. Distributed derivatives
+must also be released under the GPL. See the [`LICENSE`](LICENSE) file for the
+full text, or <https://www.gnu.org/licenses/gpl-3.0.html>.
