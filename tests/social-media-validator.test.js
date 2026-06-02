@@ -104,9 +104,10 @@ describe('Social Media Validation Engine', () => {
     const result = validateSocialMediaMetadata(fields);
     expect(result.twitter.status).toBe('pass');
     expect(result.twitter.requiredMissing).toEqual([]);
+    expect(result.twitter.requiredFallback).toEqual([]);
   });
 
-  test('fails Twitter when twitter:image is missing', () => {
+  test('fails Twitter when twitter:image is missing and og:image is also absent', () => {
     const fields = {
       'twitter:card': 'summary',
       'twitter:title': 'Title',
@@ -116,6 +117,57 @@ describe('Social Media Validation Engine', () => {
     const result = validateSocialMediaMetadata(fields);
     expect(result.twitter.status).toBe('fail');
     expect(result.twitter.requiredMissing).toEqual(['twitter:image']);
+  });
+
+  test('Twitter passes when twitter:title/description/image fall back to og:* counterparts', () => {
+    const fields = {
+      'og:title': 'OG Title',
+      'og:description': 'OG Description',
+      'og:image': 'https://example.com/og-image.jpg',
+      'twitter:card': 'summary',
+      'twitter:title': '',
+      'twitter:description': '',
+      'twitter:image': '',
+    };
+    const result = validateSocialMediaMetadata(fields);
+    expect(result.twitter.status).toBe('pass');
+    expect(result.twitter.requiredMissing).toEqual([]);
+    expect(result.twitter.requiredPresent).toEqual(['twitter:card']);
+    expect(result.twitter.requiredFallback).toEqual([
+      { field: 'twitter:title', via: 'og:title' },
+      { field: 'twitter:description', via: 'og:description' },
+      { field: 'twitter:image', via: 'og:image' },
+    ]);
+  });
+
+  test('Twitter fails when twitter:card is missing even if all og:* counterparts exist', () => {
+    const fields = {
+      'og:title': 'OG Title',
+      'og:description': 'OG Description',
+      'og:image': 'https://example.com/og-image.jpg',
+      'twitter:card': '',
+    };
+    const result = validateSocialMediaMetadata(fields);
+    expect(result.twitter.status).toBe('fail');
+    expect(result.twitter.requiredMissing).toEqual(['twitter:card']);
+  });
+
+  test('Twitter mixes explicit and fallback fields correctly', () => {
+    const fields = {
+      'og:title': 'OG Title',
+      'og:image': 'https://example.com/og-image.jpg',
+      'twitter:card': 'summary',
+      'twitter:title': 'Twitter Title',
+      'twitter:description': '',
+      'twitter:image': '',
+    };
+    const result = validateSocialMediaMetadata(fields);
+    expect(result.twitter.status).toBe('fail');
+    expect(result.twitter.requiredPresent).toEqual(['twitter:card', 'twitter:title']);
+    expect(result.twitter.requiredFallback).toEqual([
+      { field: 'twitter:image', via: 'og:image' },
+    ]);
+    expect(result.twitter.requiredMissing).toEqual(['twitter:description']);
   });
 
   test('identifies present required fields', () => {
@@ -128,6 +180,7 @@ describe('Social Media Validation Engine', () => {
     };
     const result = validateSocialMediaMetadata(fields);
     expect(result.linkedin.requiredPresent).toEqual(['og:title', 'og:description', 'og:image', 'og:url', 'og:type']);
+    expect(result.linkedin.requiredFallback).toEqual([]);
   });
 
   test('validates all three platforms simultaneously', () => {

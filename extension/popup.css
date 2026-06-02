@@ -383,6 +383,17 @@ footer {
   color: #856404;
 }
 
+.field-item.fallback {
+  background: #e2e3f3;
+  color: #383d6e;
+}
+
+.field-item-via {
+  opacity: 0.75;
+  font-size: 11px;
+  margin-left: 2px;
+}
+
 .field-item-icon {
   font-size: 12px;
   min-width: 14px;
