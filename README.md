@@ -36,8 +36,9 @@ Lists the structured data the page declares in `<script type="application/ld+jso
 
 ## Installation
 
-This extension is not published to the Chrome Web Store. Load it manually:
+From the Chrome Web Store: (https://chromewebstore.google.com/detail/seo-meta-inspector/kakbikdhijhbmbbecflbbllihbohoool)[https://chromewebstore.google.com/detail/seo-meta-inspector/kakbikdhijhbmbbecflbbllihbohoool]
 
+Load it manually:
 1. Clone or download this repository
 2. Open Chrome and go to `chrome://extensions`
 3. Enable **Developer mode** (toggle in the top-right corner)
