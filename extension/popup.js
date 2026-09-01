@@ -177,6 +177,40 @@ function renderGroup(name, entries, collapsed = false) {
     </div>`;
 }
 
+function renderJsonLdRow(row) {
+  if (row.kind === 'error') {
+    return `
+      <div class="group jsonld-row invalid">
+        <div class="group-header" role="button">
+          <span class="group-title">⚠ Invalid JSON (script ${row.scriptNumber})</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="group-body">
+          <p class="jsonld-error">${escHtml(row.message)}</p>
+          <pre class="jsonld-source">${escHtml(row.raw)}</pre>
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="group jsonld-row">
+      <div class="group-header" role="button">
+        <span class="group-title">${escHtml(row.label)}</span>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="group-body">
+        <pre class="jsonld-source">${highlightJson(row.entity)}</pre>
+      </div>
+    </div>`;
+}
+
+function renderJsonLdTab(rows) {
+  if (!rows || rows.length === 0) {
+    return '<p class="empty-state">No JSON-LD schema detected</p>';
+  }
+  return `<div class="jsonld-rows">${rows.map(renderJsonLdRow).join('')}</div>`;
+}
+
 function render(data) {
   const main = document.getElementById('content');
 
@@ -205,12 +239,7 @@ function render(data) {
 
   main.innerHTML = html;
 
-  // Collapse toggle
-  main.querySelectorAll('.group-header').forEach(header => {
-    header.addEventListener('click', () => {
-      header.closest('.group').classList.toggle('collapsed');
-    });
-  });
+  setupGroupToggle();
 
   // Handle thumbnail image interactions
   main.querySelectorAll('.thumbnail-container').forEach(container => {
@@ -249,6 +278,7 @@ function render(data) {
 
 let currentData = null;
 let currentValidations = null;
+let currentJsonLdRows = null;
 
 function switchTab(tabName) {
   const main = document.getElementById('content');
@@ -260,6 +290,9 @@ function switchTab(tabName) {
   } else if (tabName === 'social-media') {
     main.innerHTML = renderSocialMediaTab(currentValidations);
     setupCardToggle();
+  } else if (tabName === 'json-ld') {
+    main.innerHTML = renderJsonLdTab(currentJsonLdRows);
+    setupGroupToggle();
   }
 }
 
@@ -273,6 +306,14 @@ function setSocialMediaCue(validations) {
   cue.className = `tab-cue ${allPass ? 'pass' : 'fail'}`;
   cue.textContent = allPass ? '✓' : '⚠';
   tab.appendChild(cue);
+}
+
+function setupGroupToggle() {
+  document.querySelectorAll('.group-header').forEach(header => {
+    header.addEventListener('click', () => {
+      header.closest('.group').classList.toggle('collapsed');
+    });
+  });
 }
 
 function setupCardToggle() {
@@ -302,6 +343,13 @@ async function init() {
     const fields = socialMediaData[0].result;
     currentValidations = validateSocialMediaMetadata(fields);
 
+    // Extract JSON-LD structured data
+    const [{ result: jsonLdBlocks }] = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: extractJsonLd,
+    });
+    currentJsonLdRows = parseJsonLdBlocks(jsonLdBlocks || []);
+
     render(data);
     setSocialMediaCue(currentValidations);
 
@@ -311,7 +359,12 @@ async function init() {
     });
 
     document.getElementById('copy-all').addEventListener('click', async (e) => {
-      await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+      const payload = {
+        ...data,
+        jsonLd: jsonLdBlocks || [],
+        socialMedia: currentValidations,
+      };
+      await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
       e.target.textContent = 'Copied!';
       e.target.classList.add('copied');
       setTimeout(() => { e.target.textContent = 'Copy JSON'; e.target.classList.remove('copied'); }, 1500);
@@ -330,5 +383,5 @@ function renderFooter() {
 document.addEventListener('DOMContentLoaded', () => { renderFooter(); init(); });
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { checkCors, thumbnailRow };
+  module.exports = { checkCors, thumbnailRow, renderJsonLdTab, renderJsonLdRow };
 }

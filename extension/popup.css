@@ -122,7 +122,7 @@ main { padding: 10px 12px 14px; }
 .hero-row:last-child { margin-bottom: 0; }
 
 .hero-label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -130,7 +130,7 @@ main { padding: 10px 12px 14px; }
 }
 
 .hero-value {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.45;
   color: #212529;
   word-break: break-word;
@@ -141,7 +141,7 @@ main { padding: 10px 12px 14px; }
 .hero-value a:hover, .meta-value a:hover { text-decoration: underline; }
 
 .char-count {
-  font-size: 10px;
+  font-size: 11px;
   color: #adb5bd;
   margin-top: 1px;
 }
@@ -171,7 +171,7 @@ main { padding: 10px 12px 14px; }
 .group-header:hover { background: #e9ecef; }
 
 .group-title {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -179,7 +179,7 @@ main { padding: 10px 12px 14px; }
 }
 
 .group-badge {
-  font-size: 10px;
+  font-size: 11px;
   background: #dee2e6;
   color: #495057;
   border-radius: 10px;
@@ -188,7 +188,7 @@ main { padding: 10px 12px 14px; }
 }
 
 .chevron {
-  font-size: 10px;
+  font-size: 11px;
   color: #6c757d;
   margin-left: 6px;
   transition: transform 0.15s;
@@ -210,7 +210,7 @@ main { padding: 10px 12px 14px; }
 .meta-row:hover { background: #f8f9fa; }
 
 .meta-key {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: #495057;
   word-break: break-all;
@@ -218,7 +218,7 @@ main { padding: 10px 12px 14px; }
 }
 
 .meta-value {
-  font-size: 12px;
+  font-size: 13px;
   color: #212529;
   word-break: break-word;
   line-height: 1.45;
@@ -274,7 +274,7 @@ footer {
   border: 1px solid #dee2e6;
   border-radius: 4px;
   color: #6c757d;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   padding: 12px;
   box-sizing: border-box;
@@ -325,13 +325,13 @@ footer {
 }
 
 .card-status-icon {
-  font-size: 14px;
+  font-size: 15px;
   width: 16px;
   text-align: center;
 }
 
 .card-title {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: #212529;
   text-transform: uppercase;
@@ -339,7 +339,7 @@ footer {
 }
 
 .card-status-badge {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   padding: 2px 6px;
   border-radius: 10px;
@@ -374,7 +374,7 @@ footer {
 }
 
 .field-section-title {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -388,7 +388,7 @@ footer {
 }
 
 .field-item {
-  font-size: 12px;
+  font-size: 13px;
   color: #212529;
   padding: 4px 8px;
   margin: 2px 0;
@@ -420,11 +420,48 @@ footer {
 
 .field-item-via {
   opacity: 0.75;
-  font-size: 11px;
+  font-size: 12px;
   margin-left: 2px;
 }
 
 .field-item-icon {
-  font-size: 12px;
+  font-size: 13px;
   min-width: 14px;
 }
+
+/* ---- JSON-LD tab ---- */
+
+.empty-state {
+  color: #6c757d;
+  padding: 12px 0;
+}
+
+.jsonld-rows { display: block; }
+
+.jsonld-row.invalid .group-header { background: #fdf2f2; }
+.jsonld-row.invalid .group-title { color: #dc3545; }
+
+.jsonld-error {
+  margin: 0;
+  padding: 8px 10px;
+  color: #dc3545;
+  font-size: 13px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.jsonld-source {
+  margin: 0;
+  padding: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
+  overflow-x: auto;
+  background: #f8f9fa;
+  color: #212529;
+}
+
+.tok-key { color: #005cc5; }
+.tok-str { color: #22863a; }
+.tok-num { color: #b31d28; }
+.tok-lit { color: #6f42c1; }
