@@ -324,7 +324,7 @@ async function init() {
 function renderFooter() {
   const { version } = chrome.runtime.getManifest();
   const footer = document.getElementById('footer');
-  footer.innerHTML += `<span>v${escHtml(version)}</span>`;
+  footer.insertAdjacentHTML('afterbegin', `<span>v${escHtml(version)}</span>`);
 }
 
 document.addEventListener('DOMContentLoaded', () => { renderFooter(); init(); });
