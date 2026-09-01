@@ -8,6 +8,7 @@ A Chrome extension that extracts and displays SEO-relevant meta tags from any we
 - **og:image preview** — displays Open Graph image as a 200px-wide clickable thumbnail with CORS detection and error handling
 - **Character count warnings** — highlights title and description lengths that fall outside SEO best-practice ranges
 - **Grouped meta tags** — organises all `<meta>` tags into labelled, collapsible sections
+- **JSON-LD inspector** — lists every JSON-LD entity on the page by `@type`, with syntax-highlighted source
 - **Copy to clipboard** — exports all extracted data as formatted JSON with one click
 
 ## Meta tag groups
@@ -23,6 +24,15 @@ A Chrome extension that extracts and displays SEO-relevant meta tags from any we
 | **HTTP Equiv** | `http-equiv` pragma tags |
 
 General, Elastic Search, and Open Graph groups are expanded by default. All others start collapsed.
+
+## JSON-LD tab
+
+Lists the structured data the page declares in `<script type="application/ld+json">` tags. Each entity gets a row headed by its `@type`, expanded by default, showing the pretty-printed source.
+
+- A `@graph` or a top-level array is flattened into one row per entity. Nested entities (an Article's `author`, say) stay inside their parent.
+- Blocks that fail to parse are reported as **⚠ Invalid JSON (script N)** with the parser's error and the raw source — a block Google cannot read is worth seeing.
+- Only `application/ld+json` is read. Microdata, RDFa, and JSON-LD placed in `application/json` are not shown; Google ignores the last of those too.
+- Data is read from the live DOM at inspect time, so client-side-injected JSON-LD is included.
 
 ## Installation
 
