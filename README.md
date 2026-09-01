@@ -36,7 +36,7 @@ Lists the structured data the page declares in `<script type="application/ld+jso
 
 ## Installation
 
-From the Chrome Web Store: https://chromewebstore.google.com/detail/seo-meta-inspector/kakbikdhijhbmbbecflbbllihbohoool
+From the Chrome Web Store: <https://chromewebstore.google.com/detail/seo-meta-inspector/kakbikdhijhbmbbecflbbllihbohoool>
 
 Load it manually:
 1. Clone or download this repository
