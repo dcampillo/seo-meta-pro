@@ -97,9 +97,22 @@ tests/                        # Dev tooling, not packaged
 
 No data is sent to any external server. Everything runs locally in your browser.
 
+## Versioning
+
+`extension/manifest.json` is the single source of truth for the version. The
+popup footer reads it at runtime with `chrome.runtime.getManifest().version`, so
+the UI always shows the installed version — never hardcode it in `popup.html`,
+`popup.js`, or this README.
+
+To release a new version:
+
+1. Bump `"version"` in `extension/manifest.json`.
+2. Set the same value in `package.json` so the two stay in sync.
+3. Tag the release commit (`vX.Y.Z`).
+
 ## Author
 
-David Campillo — v2.0.0
+David Campillo
 
 ## License
 
