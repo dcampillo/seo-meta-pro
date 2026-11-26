@@ -56,6 +56,11 @@ Platform `status` is `pass` when `requiredMissing` is empty, regardless of how
 the others were satisfied. The UI surfaces all three groups in the Twitter card
 so users can see which fields are inherited rather than declared.
 
+> **Update (2026-11-26):** the validator now returns a fourth array,
+> `requiredInvalid: { field, value, allowed }[]`, for declared values outside a
+> field's `allowedValues` (currently only `twitter:card`). Platform `status` is
+> `pass` only when both `requiredMissing` and `requiredInvalid` are empty.
+
 ## Consequences
 
 - Pages with complete OG metadata and a `twitter:card` tag will pass the

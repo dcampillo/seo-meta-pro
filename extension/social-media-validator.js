@@ -60,6 +60,9 @@ function validateSocialMediaMetadata(fields) {
         'twitter:description': 'og:description',
         'twitter:image': 'og:image',
       },
+      allowedValues: {
+        'twitter:card': ['summary', 'summary_large_image', 'app', 'player'],
+      },
     },
     facebook: {
       required: ['og:title', 'og:description', 'og:image', 'og:url', 'og:type'],
@@ -70,12 +73,21 @@ function validateSocialMediaMetadata(fields) {
 
   Object.entries(platformRequirements).forEach(([platform, requirements]) => {
     const fallbacks = requirements.fallbacks || {};
+    const allowedValues = requirements.allowedValues || {};
     const requiredPresent = [];
+    const requiredInvalid = [];
     const requiredFallback = [];
     const requiredMissing = [];
 
     requirements.required.forEach(field => {
-      if (fields[field]) {
+      const allowed = allowedValues[field];
+      // Fields with a fixed value set are compared, and counted as blank, after trimming.
+      const value = allowed ? (fields[field] || '').trim() : fields[field];
+      if (value) {
+        if (allowed && !allowed.includes(value)) {
+          requiredInvalid.push({ field, value, allowed });
+          return;
+        }
         requiredPresent.push(field);
         return;
       }
@@ -89,8 +101,9 @@ function validateSocialMediaMetadata(fields) {
 
     results[platform] = {
       platform,
-      status: requiredMissing.length > 0 ? 'fail' : 'pass',
+      status: requiredMissing.length + requiredInvalid.length > 0 ? 'fail' : 'pass',
       requiredMissing,
+      requiredInvalid,
       requiredPresent,
       requiredFallback,
     };
