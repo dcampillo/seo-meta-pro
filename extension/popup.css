@@ -418,6 +418,22 @@ footer {
   color: #383d6e;
 }
 
+.field-item.invalid {
+  background: #fff3cd;
+  color: #856404;
+  align-items: flex-start;
+}
+
+.field-item-body {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.field-item-expected {
+  opacity: 0.85;
+  font-size: 12px;
+}
+
 .field-item-via {
   opacity: 0.75;
   font-size: 12px;

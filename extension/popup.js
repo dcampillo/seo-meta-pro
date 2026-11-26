@@ -91,7 +91,7 @@ function escHtml(str) {
 }
 
 function renderValidationCard(validation) {
-  const { platform, status, requiredPresent, requiredFallback = [], requiredMissing } = validation;
+  const { platform, status, requiredPresent, requiredFallback = [], requiredInvalid = [], requiredMissing } = validation;
   const platformLabel = platform.charAt(0).toUpperCase() + platform.slice(1);
 
   const statusIcon = status === 'pass' ? '✓' : '⚠';
@@ -110,6 +110,13 @@ function renderValidationCard(validation) {
     fieldListHtml += '<div class="field-section-title">Required (Fallback)</div>';
     requiredFallback.forEach(({ field, via }) => {
       fieldListHtml += `<div class="field-item fallback"><span class="field-item-icon">↻</span>${escHtml(field)} <span class="field-item-via">← ${escHtml(via)}</span></div>`;
+    });
+  }
+
+  if (requiredInvalid.length > 0) {
+    fieldListHtml += '<div class="field-section-title">Required (Invalid)</div>';
+    requiredInvalid.forEach(({ field, value, allowed }) => {
+      fieldListHtml += `<div class="field-item invalid"><span class="field-item-icon">!</span><div class="field-item-body">${escHtml(field)} = "${escHtml(value)}"<div class="field-item-expected">expected: ${escHtml(allowed.join(', '))}</div></div></div>`;
     });
   }
 

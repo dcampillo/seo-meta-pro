@@ -201,3 +201,55 @@ describe('Social Media Validation Engine', () => {
     expect(result.facebook.status).toBe('pass');
   });
 });
+
+describe('Twitter card type validation', () => {
+  const allowed = ['summary', 'summary_large_image', 'app', 'player'];
+  const fieldsWithCard = (card) => ({
+    'twitter:card': card,
+    'twitter:title': 'Title',
+    'twitter:description': 'Description',
+    'twitter:image': 'https://example.com/image.jpg',
+  });
+
+  test.each(allowed)('accepts the card type "%s"', (card) => {
+    const { twitter } = validateSocialMediaMetadata(fieldsWithCard(card));
+    expect(twitter.status).toBe('pass');
+    expect(twitter.requiredPresent).toContain('twitter:card');
+    expect(twitter.requiredInvalid).toEqual([]);
+  });
+
+  test('ignores surrounding whitespace around a card type', () => {
+    const { twitter } = validateSocialMediaMetadata(fieldsWithCard(' summary\n'));
+    expect(twitter.status).toBe('pass');
+    expect(twitter.requiredPresent).toContain('twitter:card');
+  });
+
+  test.each(['banana', 'Summary', 'SUMMARY_LARGE_IMAGE', 'summary large image', 'summary,app'])(
+    'fails and reports "%s" as invalid',
+    (card) => {
+      const { twitter } = validateSocialMediaMetadata(fieldsWithCard(card));
+      expect(twitter.status).toBe('fail');
+      expect(twitter.requiredInvalid).toEqual([{ field: 'twitter:card', value: card, allowed }]);
+      expect(twitter.requiredPresent).not.toContain('twitter:card');
+      expect(twitter.requiredMissing).toEqual([]);
+    }
+  );
+
+  test('reports an invalid value without its surrounding whitespace', () => {
+    const { twitter } = validateSocialMediaMetadata(fieldsWithCard('  banana  '));
+    expect(twitter.requiredInvalid[0].value).toBe('banana');
+  });
+
+  test('treats a blank card type as missing, not invalid', () => {
+    const { twitter } = validateSocialMediaMetadata(fieldsWithCard('   '));
+    expect(twitter.status).toBe('fail');
+    expect(twitter.requiredMissing).toEqual(['twitter:card']);
+    expect(twitter.requiredInvalid).toEqual([]);
+  });
+
+  test('returns an empty requiredInvalid list for platforms without value rules', () => {
+    const result = validateSocialMediaMetadata(fieldsWithCard('banana'));
+    expect(result.linkedin.requiredInvalid).toEqual([]);
+    expect(result.facebook.requiredInvalid).toEqual([]);
+  });
+});
